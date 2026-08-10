@@ -1,0 +1,22 @@
+# Python environments and caches
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+맹구_개인정보.json
+맹구_개인정보.yaml
+
+# OS and editor files
+.DS_Store
+.idea/
+.vscode/
