@@ -1,0 +1,91 @@
+# -*- coding: utf-8 -*-
+# ↑ 지우지 마세요. 한글 윈도우(cp949)에서 pip 가 이 파일의 한글 주석을
+#   깨뜨리지 않고 읽도록 하는 인코딩 선언입니다.
+# =============================================================================
+# Vision-LLM 실습 환경 requirements  ―  Windows 노트북 버전
+# 대상: Windows 11 x64 / Python 3.11 / NVIDIA GPU (CUDA 12.6)
+#
+# ※ Jetson 원본 환경용은 requirements.txt 를 보세요.
+#    이 파일은 w_*.py, w_*.ipynb (윈도우용 소스) 전용입니다.
+#
+# -----------------------------------------------------------------------------
+# [설치 방법] PowerShell 에서:
+#
+#   py -3.11 -m venv .venv
+#   .\.venv\Scripts\Activate.ps1
+#   python -m pip install --upgrade pip setuptools wheel
+#   pip install -r w_requirements.txt
+#
+# Jetson 과 달리 --no-deps 가 필요 없습니다. PyPI 에 정상적인 Windows 휠이
+# 있으므로 pip 의 의존성 해결을 그대로 쓰는 것이 맞습니다.
+#
+# -----------------------------------------------------------------------------
+# [Python 버전 주의]
+#   현재 폴더의 .venv 는 Python 3.14.5 로 만들어져 있는데, torch 와 mediapipe 는
+#   3.14 용 휠을 제공하지 않아 설치가 실패합니다. 반드시 3.11 로 다시 만드세요.
+#
+# [CUDA 주의]
+#   torch 는 +cu126 로컬 버전을 명시했습니다. PyPI 의 동일 버전(CPU 전용)이
+#   아니라 download.pytorch.org 의 CUDA 빌드가 확실히 선택되도록 하기 위함입니다.
+#   설치 후 확인:  python -c "import torch; print(torch.cuda.is_available())"
+#   별도의 CUDA Toolkit 설치는 필요 없습니다. (휠에 런타임이 포함되어 있음)
+# =============================================================================
+
+--extra-index-url https://download.pytorch.org/whl/cu126
+
+
+# --- 00. Jupyter 실습 환경 ---------------------------------------------------
+jupyter==1.1.1
+ipykernel==6.29.5
+ipywidgets==8.1.5
+
+
+# --- 02. Computer Vision -----------------------------------------------------
+# numpy 는 1.x 로 고정합니다. mediapipe / cupy 계열이 numpy 2.x 에서
+# 아직 불안정한 경우가 있어 실습 안정성을 우선했습니다.
+numpy==1.26.4
+
+# Jetson 에서는 JetPack 이 제공하던 OpenCV 를 Windows 에서는 직접 설치합니다.
+# contrib 판은 기본판의 상위 호환이며 mediapipe 가 이것을 요구합니다.
+# (opencv-python 과 동시에 설치하면 충돌하므로 하나만 씁니다)
+opencv-contrib-python==4.10.0.84
+
+matplotlib==3.9.2
+scikit-image==0.24.0
+
+# 웹캠 스트리밍 헬퍼 (imutils.video.VideoStream)
+imutils==0.5.4
+
+# MediaPipe (Hand/Face/Pose Landmarker)
+# 0.10.30 부터 py3-none-win_amd64 휠이라 Python 3.11 에서 동작합니다.
+mediapipe==0.10.35
+
+
+# --- 03. Deep Learning & GPU -------------------------------------------------
+torch==2.8.0+cu126
+torchvision==0.23.0+cu126
+
+# 모델 구조 시각화
+Pillow==10.4.0
+aggdraw==1.3.19
+visualtorch==0.2.4
+
+# CuPy (GPU 가속 배열 연산)
+# Jetson 은 aarch64 라 12.3.0 으로 고정했지만 Windows 는 최신판을 씁니다.
+cupy-cuda12x==13.6.0
+
+
+# --- 04. Object Detection (YOLO) ---------------------------------------------
+ultralytics==8.3.40
+
+# ONNX 내보내기 / 추론
+onnx==1.17.0
+onnxruntime==1.20.1
+onnxslim==0.1.95
+
+# TensorRT 는 Windows 에서 설치가 까다롭고 실습 필수가 아니므로 기본 제외합니다.
+# YOLO 를 .engine 으로 내보내는 파트를 실행하려면 아래 주석을 해제하세요.
+# tensorrt==10.7.0
+#
+# GPU 가속 ONNX 추론이 필요하면 onnxruntime 대신 아래를 쓰세요. (cuDNN 9 필요)
+# onnxruntime-gpu==1.20.1
